@@ -1,0 +1,102 @@
+h1
+{
+    color: red;
+    background-color:black;
+    text-align: center;
+    margin: 50px;
+    padding: 20px;
+}
+h2
+{
+    color: red;
+    background-color:black;
+    text-align: center;
+    margin: 50px;
+    padding: 20px;
+    font-size: 30px;
+}
+body
+{
+    background-color: red;
+}
+.icon
+{
+    height: 700px;
+    width: 700px;
+    align-self: flex-end;
+}
+nav
+{
+    font-size: 25;
+}
+nav ul
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: grey;
+}
+nav ul li
+{
+    float: left;
+}
+nav ul li a
+{
+    display: block;
+    padding: 10px;
+    background-color: grey;
+    text-decoration: none;
+    color: black;
+}
+nav ul li a:hover
+{
+    background-color: darkgrey;
+    color: white;
+}
+.loadout
+{
+    margin-top: 40px;
+    font-size: 30px;
+    color: white;
+}
+p
+{
+    font-size: 20px;
+    color: white;
+}
+.cluster
+{
+    margin-top: 40px;
+}
+.cluster_desc
+{
+    text-align: right;
+    margin-left: 393px;
+    top: 0;
+    bottom: 0;
+    position: static;
+    margin-top: -375px;
+    font-size: 23px;
+    margin-right: 10px;
+    float: right;
+}
+.gadgetdesc
+{
+    font-size: 20px;
+}
+.logo
+{
+    height: 300px;
+    width:250px;
+}
+.fact
+{
+    color: white;
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+
