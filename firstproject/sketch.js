@@ -9,7 +9,7 @@ let redAmount = 0;
 
 let redChangeAmount = 1;
 
-let brushSize = 200;
+let brushSize = 200 ;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -17,14 +17,12 @@ function setup() {
 }
 
 function draw() {
-  //var y = event.deltaY;
-
-  if (mouseWheel(event.deltaY > 0)){
-    brushSize = brushSize - 1 ;
-  }
-  if (mouseWheel(event.deltaY < 0)){
-    brushSize = brushSize + 1 ;
-  }
+  //if (mouseWheel(event.deltaY > 0)){
+  //  brushSize = brushSize - 1 ;
+ // }
+  //if (mouseWheel(event.deltaY < 0)){
+  //  brushSize = brushSize + 1 ;
+ // }
   if (mouseIsPressed){
     if (mouseButton === LEFT)
       fill(redAmount, 0, 250);
@@ -45,5 +43,3 @@ function draw() {
       ellipse(mouseX, mouseY, 100, 100);
     }
 }
-
-mouse
