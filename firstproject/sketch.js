@@ -17,17 +17,17 @@ function setup() {
 }
 
 function draw() {
-  //if (mouseWheel(event.deltaY > 0)){
-  //  brushSize = brushSize - 1 ;
- // }
-  //if (mouseWheel(event.deltaY < 0)){
-  //  brushSize = brushSize + 1 ;
- // }
+  if (WheelEvent.deltaY > 0){
+    brushSize = brushSize - 1 ;
+  }
+  if (WheelEvent.deltaY < 0){
+    brushSize = brushSize + 1 ;
+  }
   if (mouseIsPressed){
     if (mouseButton === LEFT)
       fill(redAmount, 0, 250);
       noStroke()
-      ellipse(mouseX, mouseY, 100, 100);
+      ellipse(mouseX, mouseY, brushSize, brushSize);
       redAmount += redChangeAmount;
 
       if (redAmount >= 255){
@@ -40,6 +40,7 @@ function draw() {
     if (mouseButton === RIGHT){
       fill(255, 255, 255);
       noStroke()
-      ellipse(mouseX, mouseY, 100, 100);
+      ellipse(mouseX, mouseY, brushSize, brushSize);
     }
 }
+
