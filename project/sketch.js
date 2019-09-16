@@ -48,6 +48,9 @@ function hitorstand(){
     playerTurn = false;
   }
   if (playerTurn === false){
-    draw()
+    dealerTurn()
   }
+}
+function dealerTurn(){
+  
 }
