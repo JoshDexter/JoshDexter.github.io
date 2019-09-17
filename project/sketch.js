@@ -7,7 +7,7 @@ let yourHandB;
 let yourHandT;
 let answer;
 let playerTurn;
-let T;
+let dealerT;
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
@@ -18,8 +18,10 @@ function setup(){
   dealerB = round(random(1, 11));
   yourHandA = round(random(1, 11));
   yourHandB =  round(random(1, 11));
-  //playerTurn = true;
+  playerTurn = false;
   rect(750, 700, 33, 30);
+  rect(40, 30, 35, 30);
+  draw()
 }
 function draw(){
   yourHandT = yourHandA + yourHandB;
@@ -37,20 +39,55 @@ function draw(){
   playerTurn = true; 
 }
 function hitorstand(){
-  answer = prompt("Hit or stand");
+  if (playerTurn === true){
+    answer = prompt("Hit or stand");
+  }
   if (answer === "hit"){
-    rect(750, 700, 33, 30);
+    rect(750, 700, 35, 30);
     yourHandA = yourHandA + round(random(1, 11));
     console.log(yourHandT);
     playerTurn = false;
+    draw()
   }
   else if (answer === "stand"){
     playerTurn = false;
+    console.log(dealerA);
+    console.log(dealerB);
+    dealerT = dealerA + dealerB;
+    dealerTurn();
   }
-  if (playerTurn === false){
-    dealerTurn()
-  }
+
 }
 function dealerTurn(){
-  
+  if(yourHandT > 21){
+    console.log("you lose");
+    playerTurn = false;
+    console.log(playerTurn)
+    setup()
+  }
+  while (dealerT <= 17){
+    dealerA = dealerA + round(random(1, 11));
+    dealerT = dealerA + dealerB;
+    rect(40, 30, 35, 30);
+    text(dealerT, 50, 50);
+    console.log(dealerT);
+  }
+  if ( yourHandT > dealerT && yourHandT <=21){
+    console.log("you win");
+    playerTurn = false;
+    console.log(playerTurn)
+    setup()
+  }
+  else if (dealerT > 21){
+    console.log("you win");
+    playerTurn = false;
+    console.log(playerTurn)
+    setup()     
+  }
+  else if(dealerT > yourHandT && dealerT <= 21){
+    console.log("you lose")
+    playerTurn = false;
+    console.log(playerTurn)
+    setup()
+  }
 }
