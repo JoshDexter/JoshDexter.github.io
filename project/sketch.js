@@ -4,21 +4,20 @@ let dealerA;
 let dealerB;
 let yourHandA;
 let yourHandB;
-let yourHandT;
+let yourHandT = 0;
 let answer;
 let playerTurn;
 let dealerT;
+let yourHandT1;
+let yourHandC = 0;
+
 
 function setup(){
-  bet = 0;
-  dealerA = 0;
-  dealerB = 0;
-  yourHandA = 0;
-  yourHandB = 0;
-  yourHandT = 0;
-  answer= 0;
-  dealerT = 0;
   createCanvas(windowWidth, windowHeight);
+  resetDeal();
+}
+
+function resetDeal() {
   background(255, 255, 255);
   bet = prompt("enter bet");
   textSize(25);
@@ -26,27 +25,33 @@ function setup(){
   dealerB = round(random(1, 11));
   yourHandA = round(random(1, 11));
   yourHandB =  round(random(1, 11));
+  yourHandC = 0;
   playerTurn = false;
   rect(40, 30, 35, 30);
-}
-function draw(){
-  yourHandT = yourHandA + yourHandB;
+  rect(750, 700, 35, 30);
+  if (yourHandA === 11 && yourHandB === 11){
+    yourHandB = 1;
+  }
   if (dealerA === 1){
     dealerA = 11;
   }
-  text(yourHandT, 750, 725);
+  yourHandT1 = yourHandA + yourHandB + yourHandC;
+  text(yourHandT1, 750, 725);
+  dealerT = dealerA;
+}
+
+function draw(){
+  
   text(bet, 750, 50);
   rect(50, 700, 400, 40);
+  rect(40, 30, 35, 30);
   text(answer, 50, 725);
-  text(dealerA, 50, 50);
+  text(dealerT, 50, 50);
+  //console.log(yourHandT)
   if (playerTurn === true){
     hitorstand();
   }
   playerTurn = true; 
-  if (yourHandT > 21){
-    console.log("You're a shitter.")
-  }
-  
 }
 function hitorstand(){
  
@@ -54,29 +59,24 @@ function hitorstand(){
   
   if (answer === "hit"){
     rect(750, 700, 35, 30);
-    yourHandA = yourHandA + round(random(1, 11));
-    console.log(yourHandT);
-    playerTurn = false;
-    draw()
-    
+    yourHandC = yourHandC + round(random(1, 11));
+    yourHandT = yourHandA + yourHandB + yourHandC; 
+    console.log(yourHandT)
+    text(yourHandT, 750, 725); 
   }
-  else if (answer === "stand"){
+  if (answer === "stand"){
     playerTurn = false;
-    console.log(dealerA);
-    console.log(dealerB);
-    dealerT = dealerA + dealerB;
+    //console.log(dealerA);
+    //console.log(dealerB);
+    dealerT = (dealerA + dealerB);
+    rect(40, 30, 35, 30);
+    text(dealerT, 50, 50);
+    console.log(dealerT)
     dealerTurn();
   }
 
 }
 function dealerTurn(){
-  if(yourHandT > 21){
-    console.log("you lose");
-    playerTurn = false;
-    console.log(playerTurn)
-    setup(); 
-    draw()
-  }
   while (dealerT <= 17){
     dealerA = dealerA + round(random(1, 11));
     dealerT = dealerA + dealerB;
@@ -84,12 +84,19 @@ function dealerTurn(){
     text(dealerT, 50, 50);
     console.log(dealerT);
   }
+  if(yourHandT > 21){
+    console.log("you lose");
+    playerTurn = false;
+    //console.log(playerTurn)
+    
+    
+  }
   if ( yourHandT > dealerT && yourHandT <=21){
     console.log("you win");
     playerTurn = false;
-    console.log(playerTurn)
-    setup();
-    draw()
+    //console.log(playerTurn)
+    //resetDeal();
+    
     
   
   }
@@ -97,23 +104,23 @@ function dealerTurn(){
     console.log("you win");
     playerTurn = false;
     console.log(playerTurn)
-    draw() 
+    //resetDeal();
        
   }
   else if(dealerT > yourHandT && dealerT <= 21){
-    console.log("you lose")
+    //console.log("you lose")
     playerTurn = false;
-    console.log(playerTurn)
-    setup();
-    draw()
+    //console.log(playerTurn)
+    //resetDeal();
+   
     
   }
   else if (dealerT === yourHandT){
-    console.log("Push")
+    //console.log("Push")
     playerTurn = false;
-    console.log(playerTurn)
-    setup();
-    draw()
+    //console.log(playerTurn)
+    //resetDeal();
+    
     
   }
 }
