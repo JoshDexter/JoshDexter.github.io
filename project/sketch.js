@@ -10,6 +10,8 @@ let playerTurn;
 let dealerT;
 let yourHandT1;
 let yourHandC = 0;
+let dealerC = 0;
+let dealerT1;
 
 
 function setup(){
@@ -37,7 +39,9 @@ function resetDeal() {
   }
   yourHandT1 = yourHandA + yourHandB + yourHandC;
   text(yourHandT1, 750, 725);
-  dealerT = dealerA;
+  dealerT1 = dealerA;
+  rect(40, 30, 35, 30);
+  text(dealerT1, 50, 50);
 }
 function windowResized(){
   setup();
@@ -47,9 +51,9 @@ function draw(){
   
   text(bet, 750, 50);
   rect(50, 700, 400, 40);
-  rect(40, 30, 35, 30);
+  //rect(40, 30, 35, 30);
   text(answer, 50, 725);
-  text(dealerT, 50, 50);
+  //text(dealerT, 50, 50);
   //console.log(yourHandT)
   if (playerTurn === true){
     hitorstand();
@@ -76,7 +80,7 @@ function hitorstand(){
     playerTurn = false;
     //console.log(dealerA);
     //console.log(dealerB);
-    dealerT = dealerA + dealerB;
+    dealerT = dealerA + dealerB + dealerC;
     rect(40, 30, 35, 30);
     text(dealerT, 50, 50);
     console.log(dealerT)
@@ -85,12 +89,14 @@ function hitorstand(){
 
 }
 function dealerTurn(){
+  console.log(dealerT)
   while (dealerT <= 17){
-    dealerA = dealerA + round(random(1, 11));
-    dealerT = dealerA + dealerB;
     rect(40, 30, 35, 30);
+    dealerC = dealerC + round(random(1, 11));
+    dealerT = dealerA + dealerB + dealerC; 
     text(dealerT, 50, 50);
     console.log(dealerT);
+    text(dealerT, 50, 50);
   }
     
     
