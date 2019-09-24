@@ -12,6 +12,7 @@ let yourHandT1;
 let yourHandC = 0;
 let dealerC = 0;
 let dealerT1;
+let changeScene = false;
 
 
 function setup(){
@@ -78,14 +79,24 @@ function hitorstand(){
   }
   if (answer === "stand"){
     playerTurn = false;
-    //console.log(dealerA);
-    //console.log(dealerB);
-    dealerT = dealerA + dealerB + dealerC;
     rect(40, 30, 35, 30);
+    fill(0);
+    rect(width/2, height/2, 400, 400);
+    
+    //console.log("here it is")
+    dealerT = dealerA + dealerB + dealerC;
     text(dealerT, 50, 50);
+    
+    //console.log(dealerA);
+    //console.log(dealerB);    
     console.log(dealerT)
-    dealerTurn();
-  }
+    
+    if (changeScene === true){
+      dealerTurn()
+    }
+    changeScene = !changeScene;
+    
+  
 
 }
 function dealerTurn(){
@@ -134,4 +145,5 @@ function dealerTurn(){
     
   }
 
+}
 }
