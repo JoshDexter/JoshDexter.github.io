@@ -13,6 +13,7 @@ let yourHandC = 0;
 let dealerC = 0;
 let dealerT1;
 let changeScene = false;
+let endRound = false;
 
 
 function setup(){
@@ -21,6 +22,7 @@ function setup(){
 }
 
 function resetDeal() {
+
   background(255, 255, 255);
   bet = prompt("bet");
   textSize(25);
@@ -43,23 +45,27 @@ function resetDeal() {
   dealerT1 = dealerA;
   rect(40, 30, 35, 30);
   text(dealerT1, 50, 50);
-}
-function windowResized(){
-  setup();
+  rect(1500, 20, 85, 40)
+  text("Restart", 1500, 48)
 }
 
+
 function draw(){
-  
   text(bet, 750, 50);
   rect(50, 700, 400, 40);
   //rect(40, 30, 35, 30);
   text(answer, 50, 725);
   //text(dealerT, 50, 50);
   //console.log(yourHandT)
-  if (playerTurn === true){
+  if (playerTurn === true && endRound === false){
     hitorstand();
   }
   playerTurn = true; 
+}
+function mouseClicked(){
+  if ((mouseX >= 1500 && mouseX <= 1585) && (mouseY >=20 && mouseY <= 68)){
+    location.reload();
+  }
 }
 function hitorstand(){
  
@@ -73,34 +79,24 @@ function hitorstand(){
     text(yourHandT, 750, 725); 
     if (yourHandT > 21){
       console.log("you lose");
-      resetDeal();
+      text("Lose", windowWidth/2, windowHeight/2);
+      playerTurn = false;
+      endRound = true;
     }
 
   }
   if (answer === "stand"){
     playerTurn = false;
     rect(40, 30, 35, 30);
-    fill(0);
-    rect(width/2, height/2, 400, 400);
     
-    //console.log("here it is")
+    
     dealerT = dealerA + dealerB + dealerC;
     text(dealerT, 50, 50);
     
-    //console.log(dealerA);
-    //console.log(dealerB);    
+   
     console.log(dealerT)
-    
-    if (changeScene === true){
-      dealerTurn()
-    }
-    changeScene = !changeScene;
-    
-  
 
-}
-function dealerTurn(){
-  console.log(dealerT)
+    console.log(dealerT)
   while (dealerT <= 17){
     rect(40, 30, 35, 30);
     dealerC = dealerC + round(random(1, 11));
@@ -114,36 +110,43 @@ function dealerTurn(){
 
   if ( yourHandT > dealerT && yourHandT <=21){
     console.log("you win");
+    text("Win", windowWidth/2, windowHeight/2)
     playerTurn = false;
+    endRound = true;
     //console.log(playerTurn)
-    resetDeal();
     
+
     
   
   }
   else if (dealerT > 21){
     console.log("you win");
+    text("Win", windowWidth/2, windowHeight/2)
     playerTurn = false;
     console.log(playerTurn)
-    resetDeal();
-       
+    endRound = true;
+   
+ 
   }
   else if (dealerT > yourHandT && dealerT <= 21){
     console.log("you lose")
+    text("Lose", windowWidth/2, windowHeight/2)
     playerTurn = false;
     //console.log(playerTurn)
-    resetDeal();
-   
+    endRound = true;
+ 
     
   }
   else if (dealerT === yourHandT){
     console.log("Push")
     playerTurn = false;
+    text("Push", windowWidth/2, windowHeight/2)
     //console.log(playerTurn)
-    resetDeal();
-    
-    
+    endRound = true;
   }
+    
+  
 
 }
+
 }
