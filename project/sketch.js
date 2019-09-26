@@ -1,4 +1,4 @@
-
+//creating variables
 let bet;
 let dealerA;
 let dealerB;
@@ -12,17 +12,16 @@ let yourHandT1;
 let yourHandC = 0;
 let dealerC = 0;
 let dealerT1;
-let changeScene = false;
 let endRound = false;
 
-
 function setup(){
+  //create the canvas
   createCanvas(windowWidth, windowHeight);
   resetDeal();
 }
 
 function resetDeal() {
-
+  //set up the scene
   background(255, 255, 255);
   bet = prompt("bet");
   textSize(25);
@@ -49,104 +48,75 @@ function resetDeal() {
   text("Restart", 1500, 48)
 }
 
-
 function draw(){
+  //more set up
   text(bet, 750, 50);
   rect(50, 700, 400, 40);
-  //rect(40, 30, 35, 30);
-  text(answer, 50, 725);
-  //text(dealerT, 50, 50);
-  //console.log(yourHandT)
+  text(answer, 50, 725); 
   if (playerTurn === true && endRound === false){
     hitorstand();
   }
   playerTurn = true; 
 }
+
 function mouseClicked(){
+  //checks to see if mouse is clicked on the restart button if so, it refreshs the page
   if ((mouseX >= 1500 && mouseX <= 1585) && (mouseY >=20 && mouseY <= 68)){
     location.reload();
   }
 }
+
 function hitorstand(){
- 
-  answer = prompt("Hit or stand");
-  
+  //asks for input from the user to hit or stand
+  answer = prompt("Hit or stand"); 
   if (answer === "hit"){
+    //increases your hands total by a number5 between 1 - 11
     rect(750, 700, 35, 30);
     yourHandC = yourHandC + round(random(1, 11));
-    yourHandT = yourHandA + yourHandB + yourHandC; 
-    console.log(yourHandT)
+    yourHandT = yourHandA + yourHandB + yourHandC;     
     text(yourHandT, 750, 725); 
     if (yourHandT > 21){
-      console.log("you lose");
+      //checks if you went over 21, if so ends the game
       text("Lose", windowWidth/2, windowHeight/2);
       playerTurn = false;
       endRound = true;
     }
-
   }
   if (answer === "stand"){
+    //increases the dealers hands total until it has reached at least 17
     playerTurn = false;
-    rect(40, 30, 35, 30);
-    
-    
+    rect(40, 30, 35, 30);  
     dealerT = dealerA + dealerB + dealerC;
     text(dealerT, 50, 50);
-    
    
-    console.log(dealerT)
-
-    console.log(dealerT)
   while (dealerT <= 17){
     rect(40, 30, 35, 30);
     dealerC = dealerC + round(random(1, 11));
     dealerT = dealerA + dealerB + dealerC; 
+    text(dealerT, 50, 50);  
     text(dealerT, 50, 50);
-    console.log(dealerT);
-    text(dealerT, 50, 50);
-  }
+  }   
     
-    
-
-  if ( yourHandT > dealerT && yourHandT <=21){
-    console.log("you win");
+  //Checks to see who won the game, or if it was a tie
+  if ( yourHandT > dealerT && yourHandT <=21){    
     text("Win", windowWidth/2, windowHeight/2)
     playerTurn = false;
     endRound = true;
-    //console.log(playerTurn)
-    
-
-    
-  
   }
-  else if (dealerT > 21){
-    console.log("you win");
+  else if (dealerT > 21){    
     text("Win", windowWidth/2, windowHeight/2)
-    playerTurn = false;
-    console.log(playerTurn)
+    playerTurn = false;   
     endRound = true;
-   
- 
   }
-  else if (dealerT > yourHandT && dealerT <= 21){
-    console.log("you lose")
+  else if (dealerT > yourHandT && dealerT <= 21){    
     text("Lose", windowWidth/2, windowHeight/2)
     playerTurn = false;
-    //console.log(playerTurn)
     endRound = true;
- 
-    
   }
-  else if (dealerT === yourHandT){
-    console.log("Push")
+  else if (dealerT === yourHandT){  
     playerTurn = false;
     text("Push", windowWidth/2, windowHeight/2)
-    //console.log(playerTurn)
     endRound = true;
   }
-    
-  
-
 }
-
 }
