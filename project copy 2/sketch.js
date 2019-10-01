@@ -7,7 +7,7 @@ let sausage;
 //let sausageLocationY = windowHeight/2;
 let buffer;
 let multiplierCost = 20;
-let newMillisGoal;
+let newMillisGoal = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -32,7 +32,9 @@ function UI(){
 }
 function draw(){
   UI();  
-  autoClick();
+  if (autoClicker === true){
+    autoClick();
+  }
 }
 function mousePressed(){
   if (mouseY < windowHeight/1.7 && mouseY > windowHeight/2.3 && mouseX < windowWidth/1.5 && mouseX > windowWidth/3.1){
@@ -47,7 +49,7 @@ function mousePressed(){
     buffer = score;
     if (buffer - multiplierCost >= 0){
       score -= multiplierCost;
-      multiplier += 100;
+      multiplier += 1;
       multiplierCost *= multiplier;
     }
   }
@@ -61,10 +63,14 @@ function mousePressed(){
   }
 }
 function autoClick(){
-  newMillisGoal = round(millis() + 1000);
   //console.log(newMillisGoal)
   //console.log(millis())
-  if (round(millis()) >= round(newMillisGoal - 100 && round(millis()) <= round(newMillisGoal + 100))){
+  newMillisGoal = round(millis() + 1000);
+  if (round(millis()) >= round(newMillisGoal - 10 && round(millis()) <= round(newMillisGoal + 10))){
     score += 1 * multiplier;
+    newMillisGoal = round(millis() + 1000);
+    console.log(round(newMillisGoal));
+    console.log(round(millis()))
   } 
+  newMillisGoal = round(millis() + 1000);
 }
