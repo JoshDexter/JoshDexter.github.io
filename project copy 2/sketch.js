@@ -3,11 +3,13 @@ let multiplier = 1;
 let autoClicker = false;
 let autoClickerSpeed = 0;
 let sausage;
-//let sausageLocationX = windowWidth/2;
-//let sausageLocationY = windowHeight/2;
 let buffer;
 let multiplierCost = 20;
 let newMillisGoal = 0;
+let autoClickerCost = 100;
+let clickCounter = 0;
+
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -20,7 +22,7 @@ function windowResized(){
   UI();
 }
 function UI(){
-  background(255);
+  background(255, 0, 0);
   imageMode(CENTER);
   image(sausage, windowWidth/2, windowHeight/2);
   textSize(25);
@@ -28,12 +30,18 @@ function UI(){
   rect(windowWidth/1.2, windowHeight/8, 100, 50);
   text(multiplierCost, windowWidth/1.2 + 35, windowHeight/6)
   text("multiplier", windowWidth/1.2, windowHeight/8 - 5)
-  rect(windowWidth/1.2, windowHeight/5, 100, 50)
+  rect(windowWidth/1.2, windowHeight/4, 100, 50)
+  text(autoClickerCost, windowWidth/1.2 + 28, windowHeight/3.4)
+  text("auto click", windowWidth/1.2, windowHeight/4 - 5)
 }
 function draw(){
   UI();  
   if (autoClicker === true){
     autoClick();
+  }
+  if (clickCounter === 1000){
+    clickCounter = 0;
+    multiplier = multiplier + 1 * 250;
   }
 }
 function mousePressed(){
@@ -42,6 +50,8 @@ function mousePressed(){
     console.log(score);
     console.log(windowHeight)
     console.log(windowWidth)
+    clickCounter += 1;
+    console.log(clickCounter)
     UI();  
   }
   if (mouseY > windowHeight/8 && mouseY < windowHeight/5.7 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
@@ -53,24 +63,29 @@ function mousePressed(){
       multiplierCost *= multiplier;
     }
   }
-  if (mouseY > windowHeight/5 && mouseY < windowHeight/4 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
+  if (mouseY > windowHeight/4.1 && mouseY < windowHeight/3.4 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
     console.log("ye")
-    autoClicker = true;
-    autoClickerSpeed += 1;
-    if (autoClicker === true){
-      autoClick();
-    }
+    buffer = score;
+    if (buffer - autoClickerCost >= 0){
+      autoClicker = true;
+      autoClickerSpeed += 1;
+      score -= autoClickerCost;
+      autoClickerCost *= autoClickerSpeed;
+      if (autoClicker === true){
+        newMillisGoal = round(millis() + 1000);
+        autoClick();
+      }
+    }   
   }
 }
 function autoClick(){
-  //console.log(newMillisGoal)
-  //console.log(millis())
-  newMillisGoal = round(millis() + 1000);
-  if (round(millis()) >= round(newMillisGoal - 10 && round(millis()) <= round(newMillisGoal + 10))){
+ 
+  
+  if (round(millis()) >= round(newMillisGoal) - 10  && round(millis()) <= round(newMillisGoal + 10)){
     score += 1 * multiplier;
-    newMillisGoal = round(millis() + 1000);
-    console.log(round(newMillisGoal));
-    console.log(round(millis()))
+    newMillisGoal = round(millis() + 1000/autoClickerSpeed);
+
   } 
-  newMillisGoal = round(millis() + 1000);
+  //newMillisGoal = round(millis() + 1000);
+ 
 }
