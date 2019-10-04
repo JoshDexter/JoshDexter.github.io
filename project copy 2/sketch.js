@@ -9,16 +9,18 @@ let newMillisGoal = 0;
 let autoClickerCost = 100;
 let clickCounter = 0;
 let bg;
-
+let clickSound;
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   UI();
+  soundFormats('ogg');
 }
 function preload(){
   sausage = loadImage("assets/sausage.png");
   bg = loadImage("assets/oktoberfest.jpg")
+  clickSound = loadSound('assets/3pops/pop1.ogg')
 }
 function windowResized(){
   UI();
@@ -37,15 +39,17 @@ function UI(){
   rect(windowWidth/1.2, windowHeight/8, 100, 50);
   fill(0)
   text(multiplierCost, windowWidth/1.2 + 35, windowHeight/6)
+  fill(255, 0, 0)
   text("multiplier", windowWidth/1.2, windowHeight/8 - 5)
   fill(255)
   rect(windowWidth/1.2, windowHeight/4, 100, 50)
   fill(0)
   text(autoClickerCost, windowWidth/1.2 + 28, windowHeight/3.4)
+  fill(255, 0, 0)
   text("auto click", windowWidth/1.2, windowHeight/4 - 5)
+  fill(0)
 }
 function draw(){
-  console.log(autoClicker);
   UI();  
   if (autoClicker === true){
     autoClick();
@@ -56,7 +60,9 @@ function draw(){
   }
 }
 function mousePressed(){
+  
   if (mouseY < windowHeight/1.7 && mouseY > windowHeight/2.3 && mouseX < windowWidth/1.5 && mouseX > windowWidth/3.1){
+    clickSound.play();
     score += multiplier;
     // console.log(score);
     // console.log(windowHeight)
@@ -90,7 +96,6 @@ function mousePressed(){
   }
 }
 function autoClick(){
-  console.log("autoclick function fired")
   if (round(millis()) >= round(newMillisGoal) - 10  && round(millis()) <= round(newMillisGoal + 10)){
     score += 1 * multiplier;
     newMillisGoal = round(millis() + 1000/autoClickerSpeed);
