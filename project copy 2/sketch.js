@@ -10,6 +10,8 @@ let autoClickerCost = 100;
 let clickCounter = 0;
 let bg;
 let clickSound;
+let hat;
+let hatState = false;
 
 
 function setup() {
@@ -20,6 +22,7 @@ function setup() {
 function preload(){
   sausage = loadImage("assets/sausage.png");
   bg = loadImage("assets/oktoberfest.jpg")
+  hat = loadImage("assets/hat.png")
   clickSound = loadSound('assets/3pops/pop1.ogg')
 }
 function windowResized(){
@@ -30,10 +33,11 @@ function UI(){
   imageMode(CENTER);
   image(bg, windowWidth/2, windowHeight/2, windowWidth, windowHeight)
   image(sausage, windowWidth/2, windowHeight/2);
-  textSize(25);
+  textSize(50);
   stroke(255, 0, 0)
   fill("red");
   text(score, windowWidth/2, windowHeight/8)
+  textSize(25)
   stroke(0);
   fill(255)
   rect(windowWidth/1.2, windowHeight/8, 100, 50);
@@ -43,11 +47,16 @@ function UI(){
   text("multiplier", windowWidth/1.2, windowHeight/8 - 5)
   fill(255)
   rect(windowWidth/1.2, windowHeight/4, 100, 50)
+  rect(windowWidth/1.2, windowHeight/2.75, 100, 50)
   fill(0)
   text(autoClickerCost, windowWidth/1.2 + 28, windowHeight/3.4)
   fill(255, 0, 0)
   text("auto click", windowWidth/1.2, windowHeight/4 - 5)
   fill(0)
+  if (hatState){
+    scale(0.15);
+    image(hat, windowWidth/0.37, windowHeight/0.33);
+  }
 }
 function draw(){
   UI();  
@@ -69,6 +78,7 @@ function mousePressed(){
     // console.log(windowWidth)
     clickCounter += 1;
     // console.log(clickCounter)
+    hatState = true;
     UI();  
   }
   if (mouseY > windowHeight/8 && mouseY < windowHeight/5.7 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
@@ -92,8 +102,12 @@ function mousePressed(){
         newMillisGoal = round(millis() + 1000);
         autoClick();
       }
-    }   
+    } 
+  if (mouseY > windowHeight/2.75 && mouseY < windowHeight/2 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){  
+    console.log("ye")
   }
+  }
+
 }
 function autoClick(){
   if (round(millis()) >= round(newMillisGoal) - 10  && round(millis()) <= round(newMillisGoal + 10)){
@@ -104,3 +118,4 @@ function autoClick(){
     newMillisGoal = round(millis() + 1000/autoClickerSpeed);
   }
 }
+
