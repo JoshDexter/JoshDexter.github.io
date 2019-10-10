@@ -10,10 +10,13 @@ let autoClickerCost = 100;
 let clickCounter = 0;
 let bg;
 let clickSound;
-let hat;
+let som;
+let fedora;
+let cowboy;
 let hatState = false;
-let someHat = []
 let menuState = "game";
+let someHat = [som, fedora, cowboy]
+let hatSelected;
   
 
 
@@ -22,6 +25,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   UI();
   soundFormats('ogg');
+  hatSelected = som;
 }
 function preload(){
   sausage = loadImage("assets/sausage.png");
@@ -60,7 +64,7 @@ function UI(){
     fill(0)
     if (hatState){
       scale(0.15);
-      image(someHat[0], windowWidth/0.37, windowHeight/0.33);
+      image(hatSelected, width/0.37, height/0.33);
     }
   }
   else if (menuState === "hat"){
@@ -84,48 +88,63 @@ function draw(){
   }
 }
 function mousePressed(){
-  
-  if (mouseY < windowHeight/1.7 && mouseY > windowHeight/2.3 && mouseX < windowWidth/1.5 && mouseX > windowWidth/3.1){
-    clickSound.play();
-    score += multiplier;
-    // console.log(score);
-    // console.log(windowHeight)
-    // console.log(windowWidth)
-    clickCounter += 1;
-    // console.log(clickCounter)
-    
-    UI();  
-  }
-  if (mouseY > windowHeight/8 && mouseY < windowHeight/5.7 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
-    // console.log("AUTO")
-    buffer = score;
-    if (buffer - multiplierCost >= 0){
-      score -= multiplierCost;
-      multiplier += 1;
-      multiplierCost *= multiplier;
+  if (menuState === "game"){
+    if (mouseY < windowHeight/1.7 && mouseY > windowHeight/2.3 && mouseX < windowWidth/1.5 && mouseX > windowWidth/3.1){
+      clickSound.play();
+      score += multiplier;
+      // console.log(score);
+      // console.log(windowHeight)
+      // console.log(windowWidth)
+      clickCounter += 1;
+      // console.log(clickCounter)
+      
+      UI();  
+    }
+    if (mouseY > windowHeight/8 && mouseY < windowHeight/5.7 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
+      // console.log("AUTO")
+      buffer = score;
+      if (buffer - multiplierCost >= 0){
+        score -= multiplierCost;
+        multiplier += 1;
+        multiplierCost *= multiplier;
+      }
+    }
+    if (mouseY > windowHeight/4.1 && mouseY < windowHeight/3.4 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
+      // console.log("ye")
+      buffer = score;
+      if (buffer - autoClickerCost >= 0){
+        autoClicker = true;
+        autoClickerSpeed += 1;
+        score -= autoClickerCost;
+        autoClickerCost *= autoClickerSpeed;
+        if (autoClicker === true){
+          newMillisGoal = round(millis() + 1000);
+          autoClick();
+        }
+      } 
+    }
+    if (mouseY > height/2.755 && mouseY < height/2.35 && mouseX > width/1.2 && mouseX < width/1.05){ 
+      menuState = "hat"; 
+      hatState = true;
+    }
+}
+  if (menuState === "hat"){
+    if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 && mouseX < width/7.5 + 100){
+      hatSelected = someHat[0];
+    }
+    if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 + 150 && mouseX < width/7.5 + 100 + 150){
+      hatSelected = someHat[1];
+    }
+    if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 + 300 && mouseX < width/7.5 + 100 + 300){
+      hatSelected = someHat[2];
+    }
+    if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 + 450 && mouseX < width/7.5 + 100 + 450){
+      hatSelected = someHat[3];
+    }
+    if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 + 600 && mouseX < width/7.5 + 100 + 600){
+      menuState = "game";
     }
   }
-  if (mouseY > windowHeight/4.1 && mouseY < windowHeight/3.4 && mouseX > windowWidth/1.2 && mouseX < windowWidth/1.05){
-    // console.log("ye")
-    buffer = score;
-    if (buffer - autoClickerCost >= 0){
-      autoClicker = true;
-      autoClickerSpeed += 1;
-      score -= autoClickerCost;
-      autoClickerCost *= autoClickerSpeed;
-      if (autoClicker === true){
-        newMillisGoal = round(millis() + 1000);
-        autoClick();
-      }
-    } 
-  }
-  if (mouseY > height/2.755 && mouseY < height/2.35 && mouseX > width/1.2 && mouseX < width/1.05){ 
-    menuState = "hat"; 
-    someHat.push(som);
-    hatState = true;
-  }
-
-  // console.log(mouseX, mouseY)
 }
 function autoClick(){
   if (round(millis()) >= round(newMillisGoal) - 10  && round(millis()) <= round(newMillisGoal + 10)){
