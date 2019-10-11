@@ -10,14 +10,11 @@ let autoClickerCost = 100;
 let clickCounter = 0;
 let bg;
 let clickSound;
-let som;
-let fedora;
-let cowboy;
 let hatState = false;
 let menuState = "game";
-let someHat = [som, fedora, cowboy]
+let someHat = [];
 let hatSelected;
-  
+
 
 
 
@@ -31,7 +28,12 @@ function preload(){
   sausage = loadImage("assets/sausage.png");
   bg = loadImage("assets/oktoberfest.jpg")
   som = loadImage("assets/hat.png")
+  fedora = loadImage("assets/fedora.png")
+  cowboy = loadImage("assets/cowboy.png")
   clickSound = loadSound('assets/3pops/pop1.ogg')
+  someHat.push(som);
+  someHat.push(fedora);
+  someHat.push (cowboy);
 }
 function windowResized(){
   UI();
@@ -63,8 +65,13 @@ function UI(){
     text("auto click", windowWidth/1.2, windowHeight/4 - 5)
     fill(0)
     if (hatState){
-      scale(0.15);
-      image(hatSelected, width/0.37, height/0.33);
+      scale(0.15)
+      if (hatSelected === someHat[1]){
+        image(hatSelected, width/0.36, height/0.34, 298*2, 246*2);
+      }
+      else{
+        image(hatSelected, width/0.36, height/0.34);
+      } 
     }
   }
   else if (menuState === "hat"){
@@ -75,6 +82,13 @@ function UI(){
     rect(width/7.5 + 300, height/8, 100, 50)
     rect(width/7.5 + 450, height/8, 100, 50)
     rect(width/7.5 + 600, height/8, 100, 50)
+    image(som, width/7.5, height/8, 1286/18, 1002/18);
+    image(fedora, width/7.5 + 150, height/8, 298/5, 246/5);
+    image(cowboy, width/7.5 + 300, height/8, 913/15, 720/15);
+    image(sausage, width/7.5 + 499, height/8 + 25, 417/6, 190/6)
+    fill(0);
+    text("Back", width/7.5 + 620, height/8 + 35)
+    fill(255);
   }
 }
 function draw(){
@@ -139,7 +153,8 @@ function mousePressed(){
       hatSelected = someHat[2];
     }
     if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 + 450 && mouseX < width/7.5 + 100 + 450){
-      hatSelected = someHat[3];
+      hatState = false;
+      UI();
     }
     if (mouseY > height/8 && mouseY < height/8 + 50 && mouseX > width/7.5 + 600 && mouseX < width/7.5 + 100 + 600){
       menuState = "game";
