@@ -213,4 +213,3 @@ function autoClick(){
   }
 
 }
-
