@@ -20,11 +20,15 @@ function draw() {
 
   displayCannon()
   updateBullets();
-  for(i = 0; i < 10000; i++){
+  for(i = 0; i < 10; i++){
     fire()
 
   }
-  
+  for (let i = bullets.length - 1; i > 0; i--) { 
+    if (bullets[i].x > windowWidth || bullets[i].x < 0 || bullets[i].y > windowHeight || bullets[i].y < 0 ){
+     bullets.splice(i, 1)
+    }
+  }
 }
 
 function displayCannon(){
