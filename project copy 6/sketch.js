@@ -73,14 +73,15 @@ function windowResized(){
   UI();
 }
 function UI(){
-
+  console.log("yay");
 }
 function mousePressed() {
   for (let i = 0; i < mapSize; i++){
     for (let j = 0; j < mapSize; j++){
-      if(myMap.grid[i]){
-
+      if(myMap.grid[i].mouseOver(UI)) {
+        console.log("huh");
       }
+  
     }
   }
 }

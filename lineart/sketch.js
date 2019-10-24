@@ -15,6 +15,11 @@ function draw() {
   background(220);
   displayGrid(grid);
 }
+function mousePressed() {
+  let cellSize = width/cols;
+  console.log(cellSize);
+  console.log(mouseX, mouseY);
+}
 function displayGrid(theGrid){
   for (let y = 0; y < theGrid[0].length; y++){
     for (let x = 0; x < theGrid[0].length; x++) {
