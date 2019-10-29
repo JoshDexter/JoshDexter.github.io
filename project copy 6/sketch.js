@@ -1,18 +1,38 @@
 let mapSize = 25;
-let myMap
+let myMap;
+let yChange = 0;
+let xChange = 0;
 
 class tile{
-  constructor(x1, y1, w1, h1){
+  constructor(x1, y1, w1, h1, cl){
     this.x = x1;
     this.y = y1;
 
     this.w = w1;
     this.h = h1;
 
+    this.colour = cl;
+
+    this.xMove = this.x + xChange;
+    this.yMove = this.y + yChange;
+
   }
   draw(){
-    rect(this.x, this.y, this.w, this.h);
+    this.xMove = this.x + xChange;
+    this.yMove = this.y + yChange;
+
+    push()
+    fill(this.colour)
+    rect(this.xMove, this.yMove, this.w, this.h);
+    pop()
   }
+  mouseOnTile(){
+        if (mouseX > this.xMove && mouseX < this.xMove + this.w && mouseY > this.yMove && mouseY < this.yMove + this.h){
+          console.log("works");
+          return true;
+        }else return false;
+      }
+  
 }
 
 class gridGen{
@@ -26,11 +46,11 @@ class gridGen{
     this.grid = []
 
     for (let i = 0; i < mapSize; i++){
-      this.squareLocationY += 10;
-      this.squareLocationX = 10;
+      this.squareLocationY += 50;
+      this.squareLocationX = 50;
       for (let j = 0; j < mapSize; j++){
-        this.grid.push(new tile(this.squareLocationX, this.squareLocationY, 10, 10));
-        this.squareLocationX += 10;
+        this.grid.push(new tile(this.squareLocationX, this.squareLocationY, 50, 50, "green"));
+        this.squareLocationX += 50;
       }
     }
   }
@@ -39,11 +59,20 @@ class gridGen{
       this.grid[i].draw()
     }
   }
+  mouseOnTile(){
+    for(let i =0; i < this.grid.length; i++){
+      if(this.grid[i].mouseOnTile()){
+        console.log(i)
+        this.grid[i].colour = "grey";
+      }
+    }
+  }
 }
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
   myMap = new gridGen(10,10)
+  
 
   drawMap();
 }
@@ -62,8 +91,14 @@ function drawMap(){
 }
 
 function draw(){
+  background(255)
   myMap.draw()
   UI();
+  move();
+  // if(mouseIsPressed){
+  //   myMap.mouseOnTile()
+  // }
+  
 }
 function windowResized(){
   createCanvas(windowWidth, windowHeight);
@@ -73,15 +108,22 @@ function windowResized(){
   UI();
 }
 function UI(){
-  console.log("yay");
+  //  console.log("yay");
 }
 function mousePressed() {
-  for (let i = 0; i < mapSize; i++){
-    for (let j = 0; j < mapSize; j++){
-      if(myMap.grid[i].mouseOver(UI)) {
-        console.log("huh");
-      }
-  
-    }
+  myMap.mouseOnTile()
+}
+function move(){
+  if (keyIsDown(65)){ //d
+    xChange += 5;
+  }
+  if (keyIsDown(68)){ //a
+    xChange -= 5;
+  }
+  if (keyIsDown(83)){ //s
+    yChange -= 5;
+  }
+  if (keyIsDown(87)){ //w
+    yChange += 5;
   }
 }
