@@ -2,6 +2,10 @@ let mapSize = 25;
 let myMap;
 let yChange = 0;
 let xChange = 0;
+let displayBuildMenu = false; 
+let buttons = []
+let buttonDistanceX = 50;
+let buttonDistanceY = 50;
 
 class tile{
   constructor(x1, y1, w1, h1, cl){
@@ -69,9 +73,29 @@ class gridGen{
   }
 }
 
+class Button{
+  constructor(xSize, ySize, wSize, hSize){
+    this.buttonX = xSize;
+    this.buttonY = ySize;
+
+    this.buttonW = wSize;
+    this.buttonH = hSize;
+
+
+  }
+  draw(){
+    rect(this.buttonX, this.buttonY, this.buttonW, this.buttonH)
+  }
+}
+
 function setup(){
   createCanvas(windowWidth, windowHeight);
   myMap = new gridGen(10,10)
+  for (let i = 0; i < 3; i++){
+    buttons.push(new Button(buttonDistanceX, buttonDistanceY, 25, 25,));  
+    buttonDistanceX += 50;  
+  
+  }
   
 
   drawMap();
@@ -80,14 +104,7 @@ function setup(){
 function drawMap(){
   stroke(0);
   fill('green');
-  // for (let i = 0; i < mapSize; i++){
-  //   squareLocationY += 150;
-  //   squareLocationX = 25;
-  //   for (let j = 0; j < mapSize; j++){
-  //     rect(squareLocationX, squareLocationY, 150, 150);
-  //     squareLocationX += 150;
-  //   }
-  // }
+
 }
 
 function draw(){
@@ -102,13 +119,21 @@ function draw(){
 }
 function windowResized(){
   createCanvas(windowWidth, windowHeight);
-  // squareLocationX = 25;
-  // squareLocationY = 25;
+  
   drawMap();
   UI();
 }
 function UI(){
-  //  console.log("yay");
+  if (displayBuildMenu){
+    push()
+    fill(255, 255, 255, 100)
+    rect(0, 0, 200, 300,)
+    for(let i = 0; i < 3; i++){
+      buttons[i].draw();
+    }
+    pop()
+  
+  }
 }
 function mousePressed() {
   myMap.mouseOnTile()
@@ -125,5 +150,11 @@ function move(){
   }
   if (keyIsDown(87)){ //w
     yChange += 5;
+  }
+}
+
+function keyTyped(){
+  if (keyCode === 69){
+    displayBuildMenu = !displayBuildMenu;
   }
 }
