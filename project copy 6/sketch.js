@@ -17,6 +17,7 @@ class tile{
 
     this.colour = cl;
 
+
     this.xMove = this.x + xChange;
     this.yMove = this.y + yChange;
 
@@ -86,13 +87,19 @@ class Button{
   draw(){
     rect(this.buttonX, this.buttonY, this.buttonW, this.buttonH)
   }
+  mouseOnButton(){
+    if (mouseX > this.buttonX && mouseX < this.buttonX + this.buttonW && mouseY > this.buttonY && mouseY < this.buttonY + this.buttonH){
+      return true
+    }else return false
+  }
+  
 }
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
   myMap = new gridGen(10,10)
   for (let i = 0; i < 3; i++){
-    buttons.push(new Button(buttonDistanceX, buttonDistanceY, 25, 25,));  
+    buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49));  
     buttonDistanceX += 50;  
   
   }
@@ -127,7 +134,7 @@ function UI(){
   if (displayBuildMenu){
     push()
     fill(255, 255, 255, 100)
-    rect(0, 0, 200, 300,)
+    rect(0, 0, 200, windowHeight/2)
     for(let i = 0; i < 3; i++){
       buttons[i].draw();
     }
@@ -137,6 +144,14 @@ function UI(){
 }
 function mousePressed() {
   myMap.mouseOnTile()
+  if (displayBuildMenu){
+    if(buttons[0].mouseOnButton()){
+      console.log("yo");
+    }
+    if(buttons[1].mouseOnButton()){
+      console.log("yoyo")
+    }
+  }
 }
 function move(){
   if (keyIsDown(65)){ //d
