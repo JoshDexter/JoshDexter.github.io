@@ -8,7 +8,9 @@ let buttonDistanceX = 50;
 let buttonDistanceY = 50;
 let testColor = "grey";
 let house;
-let textures = []
+let selectedImage;
+let farm;
+let population = 0
 
 class tile{
   constructor(x1, y1, w1, h1, cl){
@@ -24,6 +26,7 @@ class tile{
     this.xMove = this.x + xChange;
     this.yMove = this.y + yChange;
 
+    this.image = null;
   }
   draw(){
     this.xMove = this.x + xChange;
@@ -32,12 +35,16 @@ class tile{
     push()
     fill(this.colour)
     rect(this.xMove, this.yMove, this.w, this.h);
+    if(this.image != null){
+      image(this.image, this.xMove, this.yMove, this.w, this.h)
+    }
 
     pop()
   }
   mouseOnTile(){
         if (mouseX > this.xMove && mouseX < this.xMove + this.w && mouseY > this.yMove && mouseY < this.yMove + this.h){
           console.log("works");
+          
           return true;
         }else return false;
       }
@@ -72,23 +79,14 @@ class gridGen{
     for(let i =0; i < this.grid.length; i++){
       if(this.grid[i].mouseOnTile()){
         console.log(i)
-        image(house, 10, 10)
+        if (this.grid[i].image === null){
+          this.grid[i].image = selectedImage;
+          if (selectedImage === house){
+            population += 1;
+          }
+        }
       }
     }
-  }
-}
-class Texture {
-  constructor(xloc, yloc, ww, hh, textureSelected){
-    this.xLoc = xloc;
-    this.yLoc = yloc;
-
-    this.width = ww;
-    this.height = hh;
-
-    this.texture = textureSelected;
-
-   
-
   }
 }
 
@@ -114,8 +112,10 @@ class Button{
 }
 function preload(){
   house = loadImage("assets/clipart-home-garden-13.png");
+  farm = loadImage("assets/farm.jpg");
 }
 function setup(){
+  //frameRate(1);
   createCanvas(windowWidth, windowHeight);
   myMap = new gridGen(10,10)
   for (let i = 0; i < 3; i++){
@@ -123,7 +123,7 @@ function setup(){
     buttonDistanceX += 50;  
   
   }
-  textures.push(new Texture(50, 50, 50, 50, house))
+  
   
 
   drawMap();
@@ -172,15 +172,15 @@ function mousePressed() {
   if (displayBuildMenu){
     if(buttons[0].mouseOnButton()){
       console.log("yo");
-      testColor = "blue"
+      selectedImage = house;
     }
     if(buttons[1].mouseOnButton()){
       console.log("yoyo")
-      testColor = "red"
+      selectedImage = farm
     }
     if(buttons[2].mouseOnButton()){
       console.log("yoyoyo")
-      testColor = "grey"
+      selectedImage = null;
     }
   }
 }
