@@ -3,14 +3,22 @@ let myMap;
 let yChange = 0;
 let xChange = 0;
 let displayBuildMenu = false; 
-let buttons = []
+let buttons = [];
 let buttonDistanceX = 50;
 let buttonDistanceY = 50;
 let testColor = "grey";
 let house;
 let selectedImage;
 let farm;
-let population = 0
+let population = 0;
+let houseCount = 0;
+let jobsAvailable = 0;
+let workablePopulation = 0;
+let happiness = 0;
+let money = 0;
+let oldHouseCount = 0;
+
+
 
 class tile{
   constructor(x1, y1, w1, h1, cl){
@@ -21,6 +29,9 @@ class tile{
     this.h = h1;
 
     this.colour = cl;
+
+    this.oldHouse = false;
+    this.oldFarm = false;
 
 
     this.xMove = this.x + xChange;
@@ -74,16 +85,47 @@ class gridGen{
     for(let i =0; i < this.grid.length; i++){
       this.grid[i].draw()
     }
+  
   }
   mouseOnTile(){
     for(let i =0; i < this.grid.length; i++){
       if(this.grid[i].mouseOnTile()){
         console.log(i)
-        if (this.grid[i].image === null){
+        if (this.grid[i].image === null && selectedImage != null){
           this.grid[i].image = selectedImage;
-          if (selectedImage === house){
-            population += 1;
-          }
+          myMap.updatePopulation();
+          
+        }
+        else{
+          this.grid[i].image = selectedImage;
+          myMap.updatePopulation();
+        }
+      }
+    }
+  }
+  updatePopulation(){
+    if(oldHouseCount > houseCount){
+      houseCount -= 1;
+    }
+    
+    for (let m = 0; m < this.grid.length; m++){
+      if (this.grid[m].image === house){
+        if (this.grid[m].oldHouse === false && oldHouseCount <= houseCount){
+          houseCount += 1;
+          happiness += 1
+          this.grid[m].oldHouse = true;
+        }
+        if(oldHouseCount > houseCount){
+          houseCount -= 1;
+        }
+        
+        
+      }
+      if (this.grid[m].image === farm){
+        if(this.grid[m].oldFarm === false){
+          jobsAvailable += 1;
+          happiness += 2
+          this.grid[m].oldFarm = true;
         }
       }
     }
@@ -141,6 +183,7 @@ function draw(){
   myMap.draw()
   UI();
   move();
+  workablePopulation = round(houseCount/1.5);
   
  
   
