@@ -16,11 +16,13 @@ let jobsAvailable = 0;
 let workablePopulation = 0;
 let happiness = 0;
 let money = 0;
-let oldHouseCount = 0;
+let farmCount = 0;
+let alreadyDealtWith = false;
 
 
 
-class tile{
+
+class Tile{
   constructor(x1, y1, w1, h1, cl){
     this.x = x1;
     this.y = y1;
@@ -30,8 +32,6 @@ class tile{
 
     this.colour = cl;
 
-    this.oldHouse = false;
-    this.oldFarm = false;
 
 
     this.xMove = this.x + xChange;
@@ -62,7 +62,7 @@ class tile{
   
 }
 
-class gridGen{
+class GridGen{
   constructor(sizeX1, sizeY1){
     this.sizeX = sizeX1;
     this.sizeY = sizeY1;
@@ -76,7 +76,7 @@ class gridGen{
       this.squareLocationY += 50;
       this.squareLocationX = 50;
       for (let j = 0; j < mapSize; j++){
-        this.grid.push(new tile(this.squareLocationX, this.squareLocationY, 50, 50, "green"));
+        this.grid.push(new Tile(this.squareLocationX, this.squareLocationY, 50, 50, "green"));
         this.squareLocationX += 50;
       }
     }
@@ -104,31 +104,28 @@ class gridGen{
     }
   }
   updatePopulation(){
-    if(oldHouseCount > houseCount){
-      houseCount -= 1;
-    }
-    
+  
+    happiness = 0;
     for (let m = 0; m < this.grid.length; m++){
       if (this.grid[m].image === house){
-        if (this.grid[m].oldHouse === false && oldHouseCount <= houseCount){
-          houseCount += 1;
-          happiness += 1
-          this.grid[m].oldHouse = true;
-        }
-        if(oldHouseCount > houseCount){
-          houseCount -= 1;
-        }
         
+        houseCount += 1;
+        population = houseCount;
+        happiness += 1
         
       }
       if (this.grid[m].image === farm){
-        if(this.grid[m].oldFarm === false){
-          jobsAvailable += 1;
-          happiness += 2
-          this.grid[m].oldFarm = true;
-        }
+        
+        farmCount += 1;
+        jobsAvailable = farmCount - population
+        happiness += 2
+        
       }
     }
+    jobsAvailable = farmCount - population
+    houseCount = 0;
+    farmCount = 0;
+    statusOfCounters();
   }
 }
 
@@ -159,7 +156,7 @@ function preload(){
 function setup(){
   //frameRate(1);
   createCanvas(windowWidth, windowHeight);
-  myMap = new gridGen(10,10)
+  myMap = new GridGen(10,10)
   for (let i = 0; i < 3; i++){
     buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49));  
     buttonDistanceX += 50;  
@@ -183,7 +180,8 @@ function draw(){
   myMap.draw()
   UI();
   move();
-  workablePopulation = round(houseCount/1.5);
+  workablePopulation = round(population/1.5);
+  statusOfCounters();
   
  
   
@@ -245,5 +243,16 @@ function move(){
 function keyTyped(){
   if (keyCode === 69){
     displayBuildMenu = !displayBuildMenu;
+  }
+}
+
+function statusOfCounters(){
+  if (jobsAvailable < population && alreadyDealtWith === false){
+    happiness = round(happiness/3);
+    console.log(happiness)
+    alreadyDealtWith = true;
+  }
+  if (population <= jobsAvailable){
+    alreadyDealtWith = false;
   }
 }
