@@ -5,7 +5,7 @@ let xChange = 0;
 let displayBuildMenu = false; 
 let buttons = [];
 let buttonDistanceX = 50;
-let buttonDistanceY = 50;
+let buttonDistanceY = 100;
 let testColor = "grey";
 let house;
 let selectedImage;
@@ -53,8 +53,8 @@ class Tile{
     pop()
   }
   mouseOnTile(){
-        if (mouseX > this.xMove && mouseX < this.xMove + this.w && mouseY > this.yMove && mouseY < this.yMove + this.h){
-          console.log("works");
+        if (mouseX > this.xMove && mouseX < this.xMove + this.w && mouseY > this.yMove && mouseY < this.yMove + this.h && displayBuildMenu === false){
+
           
           return true;
         }else return false;
@@ -90,7 +90,7 @@ class GridGen{
   mouseOnTile(){
     for(let i =0; i < this.grid.length; i++){
       if(this.grid[i].mouseOnTile()){
-        console.log(i)
+        
         if (this.grid[i].image === null && selectedImage != null){
           this.grid[i].image = selectedImage;
           myMap.updatePopulation();
@@ -110,21 +110,26 @@ class GridGen{
       if (this.grid[m].image === house){
         
         houseCount += 1;
-        population = houseCount;
-        happiness += 1
+        population = houseCount + 3;
+        if (population <= jobsAvailable){
+          happiness += 1
+        }
         
       }
       if (this.grid[m].image === farm){
         
         farmCount += 1;
         jobsAvailable = farmCount - population
-        happiness += 2
+        if(population <= jobsAvailable){
+          happiness += 2
+        }
         
       }
     }
-    jobsAvailable = farmCount - population
+    jobsAvailable = farmCount - workablePopulation
     houseCount = 0;
     farmCount = 0;
+    // alreadyDealtWith = false;
     statusOfCounters();
   }
 }
@@ -181,7 +186,7 @@ function draw(){
   UI();
   move();
   workablePopulation = round(population/1.5);
-  statusOfCounters();
+  // statusOfCounters();
   
  
   
@@ -200,27 +205,32 @@ function UI(){
   if (displayBuildMenu){
     push()
     fill(255, 255, 255, 100)
-    rect(0, 0, 200, windowHeight/2)
+    rect(0, 75, 200, windowHeight/2)
     for(let i = 0; i < 3; i++){
       buttons[i].draw();
     }
     pop()
-  
   }
+  
+  push()
+  fill(255, 255, 255, 100)
+  rect(0, 0, windowWidth, 50)
+  pop()
+  textSize(25)
+  text("Happiness " + happiness, 15, 30)
+  text("Jobs " + jobsAvailable, 200, 30)
+  text("Woking People " + workablePopulation, 300, 30)
 }
 function mousePressed() {
   myMap.mouseOnTile()
   if (displayBuildMenu){
     if(buttons[0].mouseOnButton()){
-      console.log("yo");
       selectedImage = house;
     }
     if(buttons[1].mouseOnButton()){
-      console.log("yoyo")
       selectedImage = farm
     }
     if(buttons[2].mouseOnButton()){
-      console.log("yoyoyo")
       selectedImage = null;
     }
   }
@@ -247,12 +257,15 @@ function keyTyped(){
 }
 
 function statusOfCounters(){
-  if (jobsAvailable < population && alreadyDealtWith === false){
-    happiness = round(happiness/3);
+  if (jobsAvailable < 0 ){
+    oldHappiness = happiness;
+    happiness -= 1;
     console.log(happiness)
-    alreadyDealtWith = true;
+    // alreadyDealtWith = true;
+
   }
-  if (population <= jobsAvailable){
-    alreadyDealtWith = false;
-  }
+  // if (jobsAvailable >= 0) {
+  //   // alreadyDealtWith = false;
+  //   happiness += 1;
+  // }
 }
