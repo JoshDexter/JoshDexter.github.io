@@ -110,7 +110,7 @@ class GridGen{
       if (this.grid[m].image === house){
         
         houseCount += 1;
-        population = houseCount + 3;
+        population = houseCount * 4;
         if (population <= jobsAvailable){
           happiness += 1
         }
@@ -119,14 +119,14 @@ class GridGen{
       if (this.grid[m].image === farm){
         
         farmCount += 1;
-        jobsAvailable = farmCount - population
-        if(population <= jobsAvailable){
+        jobsAvailable = (farmCount - workablePopulation) * 4
+        if(workablePopulation <= jobsAvailable && workablePopulation - 5 > jobsAvailable && workablePopulation + 5 < jobsAvailable ){
           happiness += 2
         }
         
       }
     }
-    jobsAvailable = farmCount - workablePopulation
+    jobsAvailable = (farmCount - workablePopulation) * 4
     houseCount = 0;
     farmCount = 0;
     // alreadyDealtWith = false;
@@ -257,12 +257,14 @@ function keyTyped(){
 }
 
 function statusOfCounters(){
-  if (jobsAvailable < 0 ){
+  if (jobsAvailable < 1 ){
     oldHappiness = happiness;
     happiness -= 1;
     console.log(happiness)
     // alreadyDealtWith = true;
-
+  }
+  if (jobsAvailable < 0) {
+    jobsAvailable = 0;
   }
   // if (jobsAvailable >= 0) {
   //   // alreadyDealtWith = false;
