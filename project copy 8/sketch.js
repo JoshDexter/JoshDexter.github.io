@@ -21,16 +21,34 @@ let populateMillisGoal;
 let population = [];
 let newMillisGoal = 0;
 let create = true;
-let housesAvailable = 1;
+let housesAvailable = 0;
+let occupiedProperty =0;
+let oldHouseCount = 0;
+let jobs = 0;
+let possibleWorkers = 0;
 
 
 class Human{
     constructor(age1, lifeExpectany1){
         this.age = age1;
         this.lifeExpectancy = lifeExpectany1;
-    }
-    draw(){
 
+        this.ageAlreadyChecked = false;
+
+        
+    }
+ 
+    ageCheck(){
+        if (this.age > 18 ){
+            this.ageAlreadyChecked = true;
+            return true;
+            
+        }
+        else{
+            
+            return false;
+        }
+        
     }
 }
 
@@ -121,20 +139,35 @@ class GridGen{
     for (let m = 0; m < this.grid.length; m++){
       if (this.grid[m].image === house){
         
-        houseCount += 1;
-     
-       
-
+        houseCount += 1;       
         
       }
       if (this.grid[m].image === farm){
         
         farmCount += 1;
-        
-        
+  
       }
+
+     
     }
-    housesAvailable = houseCount;
+    if(workablePopulation < jobsAvailable){
+      console.log("YAYAYYAYA")
+      happiness += 2
+    }   
+    if (oldHouseCount > houseCount){
+      for (let q = 0; q < 4; q++){
+        population.pop();
+      }
+      checkAge();
+    }
+    jobs = farmCount * 4;
+    jobsAvailable = farmCount - workablePopulation;
+    if (jobsAvailable <= 0){
+      jobsAvailable = 0;
+    }
+    oldHouseCount = houseCount
+    housesAvailable =  (houseCount * 4) - population.length;
+    newMillisGoal = millis() + 1000;
     houseCount = 0;
     farmCount = 0;
 
@@ -167,7 +200,7 @@ function preload(){
 }
 function setup(){
     
-  //frameRate(1);
+
   createCanvas(windowWidth, windowHeight);
   myMap = new GridGen(10,10)
   for (let i = 0; i < 3; i++){
@@ -188,14 +221,12 @@ function drawMap(){
 }
 
 function draw(){
-//     console.log(millis())
-//   console.log("goal " + populateMillisGoal)
-if (housesAvailable >= 1){
+
+if (housesAvailable >= 1){   
     populate();
+    
 }
-  if (housesAvailable < 1){
-      console.log(housesAvailable)
-  }
+
   background(255)
   myMap.draw()
   UI();
@@ -203,12 +234,7 @@ if (housesAvailable >= 1){
   if (housesAvailable >= 1){
       populate();
   }
-//   population.push(new Human(random(1, 50), random(50, 100)))
-  
-//   console.log(populateMillisGoal)
- 
-  
- 
+
   
   // if(mouseIsPressed){
   //   myMap.mouseOnTile()
@@ -240,11 +266,12 @@ function UI(){
   textSize(25)
   text("Happiness " + happiness, 15, 30)
   text("Jobs " + jobsAvailable, 200, 30)
-  text("Woking People " + workablePopulation, 300, 30)
+  text("Working People " + workablePopulation, 300, 30)
+  text("Population " + population.length, 600, 30)
 }
 function mousePressed() {
-  console.log(millis())
-  console.log("goal " + newMillisGoal)
+  
+ 
   myMap.mouseOnTile()
   if (displayBuildMenu){
     if(buttons[0].mouseOnButton()){
@@ -280,19 +307,43 @@ function keyTyped(){
 }
 
 function populate(){
-    //console.log(millis())
-   
-    //console.log("goal " + populateMillisGoal)
-    if (round(millis()) >= round(newMillisGoal) - 500 && round(millis()) <= round(newMillisGoal + 500)){
-        console.log("yay")
+ 
+    if (round(millis()) >= round(newMillisGoal) - 500 && round(millis()) <= round(newMillisGoal + 500) && housesAvailable >= 0){
+        housesAvailable -= occupiedProperty;
+        
         newMillisGoal = millis() + 1000;
-        population.push(new Human(random(1, 50), random(50, 100)))      
+        
+        population.push(new Human(random(1, 50), random(50, 100)))
+        myMap.updatePopulation();
+        occupiedProperty += 1;
+        
+     
+        checkAge();
+        
+          
+        
+             
     }
-    if (millis() > populateMillisGoal + 1100){
+    if (millis() > populateMillisGoal + 600){
         console.log("no")
         newMillisGoal = millis() + 1000;       
     }
+    else{
+      return false;
+    }
     
+    
+    
+}
+function checkAge(){
+    for (let l = 0; l < population.length; l++){
+        if(population[l].ageCheck()){
+            possibleWorkers += 1;
+        }
+
+    }
+    workablePopulation = possibleWorkers;
+    possibleWorkers = 0
 }
 function statusOfCounters(){
   if (jobsAvailable < 1 ){

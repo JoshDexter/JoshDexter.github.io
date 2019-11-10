@@ -110,6 +110,7 @@ class GridGen{
       if (this.grid[m].image === house){
         
         houseCount += 1;
+        console.log("houses " + houseCount)
         population = houseCount * 4;
         if (population <= jobsAvailable){
           happiness += 1
@@ -125,6 +126,7 @@ class GridGen{
         }
         
       }
+      
     }
     jobsAvailable = (farmCount - workablePopulation) * 4
     houseCount = 0;
@@ -186,7 +188,7 @@ function draw(){
   UI();
   move();
   workablePopulation = round(population/1.5);
-  // statusOfCounters();
+  // statusOfCounters();qqqq
   
  
   
@@ -222,6 +224,7 @@ function UI(){
   text("Woking People " + workablePopulation, 300, 30)
 }
 function mousePressed() {
+  console.log(houseCount)
   myMap.mouseOnTile()
   if (displayBuildMenu){
     if(buttons[0].mouseOnButton()){
