@@ -26,7 +26,14 @@ let occupiedProperty =0;
 let oldHouseCount = 0;
 let jobs = 0;
 let possibleWorkers = 0;
-
+let taxMillisGoal = 0;
+let oldFarmCount = 0;
+let remove;
+let road;
+let x;
+let y;
+let w;
+let h;
 
 class Human{
     constructor(age1, lifeExpectany1){
@@ -62,7 +69,10 @@ class Tile{
 
     this.colour = cl;
 
-
+    x = this.x
+    y = this.y
+    w = this.w
+    h = this.h
 
     this.xMove = this.x + xChange;
     this.yMove = this.y + yChange;
@@ -78,7 +88,10 @@ class Tile{
     rect(this.xMove, this.yMove, this.w, this.h);
     if(this.image != null){
       image(this.image, this.xMove, this.yMove, this.w, this.h)
-    }
+
+      }
+    
+  
 
     pop()
   }
@@ -122,12 +135,35 @@ class GridGen{
       if(this.grid[i].mouseOnTile()){
         
         if (this.grid[i].image === null && selectedImage != null){
+          if (selectedImage === house){
+            if (money >=1000){
+              money -= 1000 
+              this.grid[i].image = selectedImage;
+              myMap.updatePopulation();
+            }
+          }
+          if (selectedImage === farm){
+            if (money >= 1500){
+              money -= 1500 
+              this.grid[i].image = selectedImage;
+              myMap.updatePopulation();
+            }
+          }
+          if (selectedImage === road){
+            if (money >= 50){
+              money -= 50
+              this.grid[i].image = selectedImage;
+              myMap.updatePopulation();
+            }
+          }
+        
+        }
+        else if(selectedImage === null){
           this.grid[i].image = selectedImage;
           myMap.updatePopulation();
-          
         }
         else{
-          this.grid[i].image = selectedImage;
+          //this.grid[i].image = selectedImage;
           myMap.updatePopulation();
         }
       }
@@ -153,7 +189,8 @@ class GridGen{
     if(workablePopulation < jobsAvailable){
       console.log("YAYAYYAYA")
       happiness += 2
-    }   
+    } 
+    
     if (oldHouseCount > houseCount){
       for (let q = 0; q < 4; q++){
         population.pop();
@@ -161,31 +198,46 @@ class GridGen{
       checkAge();
     }
     jobs = farmCount * 4;
-    jobsAvailable = farmCount - workablePopulation;
+    jobsAvailable = jobs - workablePopulation;
     if (jobsAvailable <= 0){
       jobsAvailable = 0;
     }
+    oldFarmCount = farmCount;
     oldHouseCount = houseCount
     housesAvailable =  (houseCount * 4) - population.length;
     newMillisGoal = millis() + 1000;
+    taxMillisGoal = millis() + 1000;
     houseCount = 0;
     farmCount = 0;
+    // return oldHouseCount;
 
   }
 }
 
 class Button{
-  constructor(xSize, ySize, wSize, hSize){
+  constructor(xSize, ySize, wSize, hSize, buttonImage, itemCost){
     this.buttonX = xSize;
     this.buttonY = ySize;
 
     this.buttonW = wSize;
     this.buttonH = hSize;
 
+    this.image = buttonImage;
+
+    this.cost = itemCost;
+
 
   }
   draw(){
-    rect(this.buttonX, this.buttonY, this.buttonW, this.buttonH)
+    rect(this.buttonX, this.buttonY, this.buttonW, this.buttonH);
+    image(this.image, this.buttonX, this.buttonY, this.buttonW, this.buttonH);
+    if (this.cost > 0){
+      push();
+      textSize(15);
+      fill(0);
+      text(this.cost, this.buttonX, this.buttonY + 65);
+      pop();
+    }
   }
   mouseOnButton(){
     if (mouseX > this.buttonX && mouseX < this.buttonX + this.buttonW && mouseY > this.buttonY && mouseY < this.buttonY + this.buttonH){
@@ -197,17 +249,24 @@ class Button{
 function preload(){
   house = loadImage("assets/clipart-home-garden-13.png");
   farm = loadImage("assets/farm.jpg");
+  remove = loadImage("assets/x.png");
+  road = loadImage("assets/road.jpg");
 }
 function setup(){
-    
-
+  frameRate(15);
+  money = 10000;
   createCanvas(windowWidth, windowHeight);
   myMap = new GridGen(10,10)
-  for (let i = 0; i < 3; i++){
-    buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49));  
-    buttonDistanceX += 50;  
+  buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49, house, 1000));
+  buttonDistanceX += 50;  
+  buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49, farm, 1500)); 
+  buttonDistanceX += 50;  
+  buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49, remove, 0)); 
+  buttonDistanceX -= 100;
+  buttonDistanceY += 75; 
+  buttons.push(new Button(buttonDistanceX -25, buttonDistanceY, 49, 49, road, 50));
   
-  }
+  
   
   
 
@@ -222,8 +281,9 @@ function drawMap(){
 
 function draw(){
 
-if (housesAvailable >= 1){   
-    populate();
+if (oldHouseCount >= 1 || oldFarmCount >= 1){   
+    
+    incomeTax();
     
 }
 
@@ -233,6 +293,7 @@ if (housesAvailable >= 1){
   move();
   if (housesAvailable >= 1){
       populate();
+      incomeTax();
   }
 
   
@@ -253,7 +314,7 @@ function UI(){
     push()
     fill(255, 255, 255, 100)
     rect(0, 75, 200, windowHeight/2)
-    for(let i = 0; i < 3; i++){
+    for(let i = 0; i < 4; i++){
       buttons[i].draw();
     }
     pop()
@@ -264,10 +325,11 @@ function UI(){
   rect(0, 0, windowWidth, 50)
   pop()
   textSize(25)
+  text("$" + money, 750, 30)
   text("Happiness " + happiness, 15, 30)
   text("Jobs " + jobsAvailable, 200, 30)
   text("Working People " + workablePopulation, 300, 30)
-  text("Population " + population.length, 600, 30)
+  text("Population " + population.length, 550, 30)
 }
 function mousePressed() {
   
@@ -282,6 +344,9 @@ function mousePressed() {
     }
     if(buttons[2].mouseOnButton()){
       selectedImage = null;
+    }
+    if(buttons[3].mouseOnButton()){
+      selectedImage = road;
     }
   }
 }
@@ -304,6 +369,7 @@ function keyTyped(){
   if (keyCode === 69){
     displayBuildMenu = !displayBuildMenu;
   }
+
 }
 
 function populate(){
@@ -324,7 +390,7 @@ function populate(){
         
              
     }
-    if (millis() > populateMillisGoal + 600){
+    if (millis() > newMillisGoal + 600){
         console.log("no")
         newMillisGoal = millis() + 1000;       
     }
@@ -357,4 +423,24 @@ function statusOfCounters(){
     happiness++;
   }
 
+}
+function incomeTax(){
+  
+  if (round(millis()) >= round(taxMillisGoal) - 500 && round(millis()) <= round(taxMillisGoal + 500) && housesAvailable >= 0){
+    console.log("yes")
+    // myMap.updatePopulation();
+    money += oldHouseCount * 100;
+    money += oldFarmCount * 250;
+    taxMillisGoal = millis() + 1000;
+  }
+  // if (millis() > taxMillisGoal + 600){
+  //   console.log("no")
+  //   newMillisGoal = millis() + 1000;       
+  // }
+}
+function loseMoneyCuck(){
+  if (round(millis()) >= round(taxMillisGoal) - 500 && round(millis()) <= round(taxMillisGoal + 500) && housesAvailable >= 0){
+    money -= 1000
+    taxMillisGoal = millis() + 1000;
+  }
 }
