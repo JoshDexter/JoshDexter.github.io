@@ -1,68 +1,69 @@
-let cannonX ;
-let cannonY ;
-let cannonWidth ;
-let cannonLength ;
-let cannonAngle;
-let bullets = [];
+  
+// OOP Bullet
 
-function setup(){
-  createCanvas(windowWidth, windowHeight)
+let theFireWorks = [];
 
-   cannonX = 75;
-   cannonY = height - 150;
-   cannonWidth = 50;
-   cannonLength = 125;
-   cannonAngle = 0;
+function setup() {
+  createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
-  background(220);
+  background(0);
+  for (let i = theFireWorks.length - 1 ; i >= 0; i--) {
+    theFireWorks[i].move();
+    if(theFireWorks[i].isDone()){
+      theFireWorks.splice(i, 1);
+    }
+    else{
 
-  displayCannon()
-  updateBullets();
-  for(i = 0; i < 10; i++){
-    fire()
-
-  }
-  for (let i = bullets.length - 1; i > 0; i--) { 
-    if (bullets[i].x > windowWidth || bullets[i].x < 0 || bullets[i].y > windowHeight || bullets[i].y < 0 ){
-     bullets.splice(i, 1)
+      theFireWorks[i].display();
     }
   }
+
+
 }
 
-function displayCannon(){
-  push();
-  translate(cannonX, cannonY);
-  cannonAngle = atan2(mouseY - cannonY, mouseX - cannonX);
-  rotate(cannonAngle);
-  rect(0, -cannonWidth/2, cannonLength, cannonWidth)
-  circle(0, 0, cannonWidth)
-  pop();
-}
-function mouseClicked() {
-  fire();
-}
-function fire() {
-  let bullet = {
-    x: cannonX,
-    y: cannonY,
-    radius: cannonWidth,
-    angle: random(1, 360),
-    speed: 5,
-    r: random(1, 255),
-    g: random(1, 255),
-    b: random(1, 255)
-  };
-  bullets.push(bullet);
-}
-function updateBullets() {
-  for (let bullet of bullets) {
-    bullet.x += bullet.speed * cos(bullet.angle);
-    bullet.y += bullet.speed * sin(bullet.angle);
-    fill(bullet.r, bullet.g, bullet.b)
-    circle(bullet.x, bullet.y, bullet.radius);
-    fill(255)
-
+function mousePressed() {
+  for (let i = 0; i <= 75; i++){
+    
+    // fill(random(1, 255), random(1, 255), random(1, 255));
+    
+    let myBullet = new Bullet(mouseX, mouseY, random(-3,3), random(-3, 3), 10, random(1, 255), random(1, 255), random(1, 255));
+    
+    theFireWorks.push(myBullet);
   }
+}
+
+class Bullet {
+  constructor(x, y, dx, dy, radius, col1, col2, col3) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.radius = radius;
+    this.alpha = 255;
+    this.colour1 = col1;
+    this.colour2 = col2;
+    this.colour3 = col3;
+    this.gravity = 0.06;
+  }
+
+  display() {
+    noStroke();
+    fill(this.colour1, this.colour2, this.colour3, this.alpha);
+    circle(this.x, this.y, this.radius * 2);
+  }
+
+  move() {
+    this.dy += this.gravity;
+    this.x += this.dx;
+    this.y += this.dy;
+    this.alpha -= 2;
+  }
+  isDone() {
+    return this.alpha <= 0;
+  }
+  
+  
+  
 }

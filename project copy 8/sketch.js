@@ -34,16 +34,21 @@ let x;
 let y;
 let w;
 let h;
+let atWork = 0;
+let isWorking;
 
 class Human{
-    constructor(age1, lifeExpectany1){
+    constructor(age1, lifeExpectany1, hasJob, isHappy){
         this.age = age1;
         this.lifeExpectancy = lifeExpectany1;
 
         this.ageAlreadyChecked = false;
+        this.job = hasJob;
+        this.happy = isHappy;
 
-        
+   
     }
+   
  
     ageCheck(){
         if (this.age > 18 ){
@@ -56,6 +61,18 @@ class Human{
             return false;
         }
         
+    }
+    jobsCheck(){
+         if (jobsAvailable > 0 && this.ageAlreadyChecked){
+             
+            this.job = true;
+            return true;
+        }
+        else{
+            // this.job = false
+            
+            return false;
+        }
     }
 }
 
@@ -147,6 +164,8 @@ class GridGen{
               money -= 1500 
               this.grid[i].image = selectedImage;
               myMap.updatePopulation();
+              
+              
             }
           }
           if (selectedImage === road){
@@ -163,7 +182,7 @@ class GridGen{
           myMap.updatePopulation();
         }
         else{
-          //this.grid[i].image = selectedImage;
+          
           myMap.updatePopulation();
         }
       }
@@ -186,10 +205,10 @@ class GridGen{
 
      
     }
-    if(workablePopulation < jobsAvailable){
-      console.log("YAYAYYAYA")
-      happiness += 2
-    } 
+    // if(workablePopulation < jobsAvailable){
+    //   console.log("YAYAYYAYA")
+    //   happiness += 2;
+    // } 
     
     if (oldHouseCount > houseCount){
       for (let q = 0; q < 4; q++){
@@ -209,7 +228,7 @@ class GridGen{
     taxMillisGoal = millis() + 1000;
     houseCount = 0;
     farmCount = 0;
-    // return oldHouseCount;
+    
 
   }
 }
@@ -253,7 +272,7 @@ function preload(){
   road = loadImage("assets/road.jpg");
 }
 function setup(){
-  frameRate(15);
+  
   money = 10000;
   createCanvas(windowWidth, windowHeight);
   myMap = new GridGen(10,10)
@@ -295,11 +314,15 @@ if (oldHouseCount >= 1 || oldFarmCount >= 1){
       populate();
       incomeTax();
   }
+  if(workablePopulation > 0 && jobsAvailable > 0){
+
+      checkJob()
+  }
 
   
-  // if(mouseIsPressed){
-  //   myMap.mouseOnTile()
-  // }
+  if(mouseIsPressed){
+    myMap.mouseOnTile()
+  }
   
 }
 function windowResized(){
@@ -333,7 +356,7 @@ function UI(){
 }
 function mousePressed() {
   
- 
+  
   myMap.mouseOnTile()
   if (displayBuildMenu){
     if(buttons[0].mouseOnButton()){
@@ -379,12 +402,14 @@ function populate(){
         
         newMillisGoal = millis() + 1000;
         
-        population.push(new Human(random(1, 50), random(50, 100)))
+        population.push(new Human(random(1, 50), random(50, 100), false, false))
         myMap.updatePopulation();
         occupiedProperty += 1;
+     
         
      
         checkAge();
+        checkJob();
         
           
         
@@ -411,36 +436,43 @@ function checkAge(){
     workablePopulation = possibleWorkers;
     possibleWorkers = 0
 }
-function statusOfCounters(){
-  if (jobsAvailable < 1 ){
-    oldHappiness = happiness;
-    happiness -= 1;
-    console.log(happiness)
-    // alreadyDealtWith = true;
-  }
-  if (jobsAvailable <= 0) {
-    jobsAvailable = 0;
-    happiness++;
-  }
+// function statusOfCounters(){
+//   if (jobsAvailable < 1 ){
+//     oldHappiness = happiness;
+//     happiness -= 1;
+//     console.log(happiness)
+    
+//   }
+//   if (jobsAvailable <= 0) {
+//     jobsAvailable = 0;
+//     happiness++;
+//   }
 
-}
+//}
 function incomeTax(){
   
   if (round(millis()) >= round(taxMillisGoal) - 500 && round(millis()) <= round(taxMillisGoal + 500) && housesAvailable >= 0){
     console.log("yes")
-    // myMap.updatePopulation();
+    
     money += oldHouseCount * 100;
     money += oldFarmCount * 250;
     taxMillisGoal = millis() + 1000;
   }
-  // if (millis() > taxMillisGoal + 600){
-  //   console.log("no")
-  //   newMillisGoal = millis() + 1000;       
-  // }
+
 }
-function loseMoneyCuck(){
+function loseMoney(){
   if (round(millis()) >= round(taxMillisGoal) - 500 && round(millis()) <= round(taxMillisGoal + 500) && housesAvailable >= 0){
     money -= 1000
     taxMillisGoal = millis() + 1000;
   }
+}
+function checkJob(){
+    for (let l = 0; l < population.length; l++){
+        if(population[l].jobsCheck()){
+            atWork += 1;
+        }
+
+    }
+    isWorking = atWork;
+    atWork = 0
 }
