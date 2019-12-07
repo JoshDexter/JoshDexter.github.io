@@ -21,6 +21,7 @@ let button;
 let calculateYes = false;
 let calculated = false;
 let posReport = 0;
+let shown = false;
 
 class OkButton{
   constructor(x1, y1, w1, h1, text1){
@@ -126,6 +127,7 @@ function mousePressed(){
     if(currencyType[i].mouseOn()){
       console.log("click")
       currencyType[i].clickedOn = true;
+      currencyType[i].textData = " ";
     }
   }
   if (button.mouseOver()){
@@ -155,21 +157,29 @@ function calculate(){
   if (calculated === false){
     
     for(let i = 0; i < currencyType.length - 1; i++){
-      answer += parseFloat(currencyType[i].textData)
+      if (currencyType[i].textData !== " "){
+
+        answer += parseFloat(currencyType[i].textData)
+      }
       
     }
     posReport = parseFloat(currencyType[15].textData);
     calculated = true;
     posReport = Number(posReport);
+    answer = Number(answer);
   }
   fill(0)
-  text("total cash: " + answer.toFixed(2), windowWidth/2, windowHeight/1.5);
+  
+    
+  text("total cash: " + Number(answer.toFixed(2)), windowWidth/2, windowHeight/1.5);
   
   text("actual cash: " + Number(answer - 400).toFixed(2), windowWidth/2, windowHeight/1.5 + 50);
 
   text("Over/Under: " + Number((answer - 400) - posReport).toFixed(2), windowWidth/2, windowHeight/1.5 + 100);
-  console.log(Number(answer - 400 - posReport))
-  //answer = 0;
+  
+  console.log(Number(answer))
+  answer = 0;
+  calculated = false;
 }
   
 
